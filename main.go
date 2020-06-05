@@ -4,6 +4,7 @@ import (
 	"github.com/micro/go-micro/util/log"
 	"github.com/micro/go-micro/v2"
 	"github.com/pku-hit/dict/handler"
+	_ "github.com/pku-hit/dict/model/entity"
 	proto "github.com/pku-hit/dict/proto"
 	"github.com/pku-hit/dict/subscriber"
 )

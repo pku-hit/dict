@@ -3,6 +3,7 @@ module github.com/pku-hit/dict
 go 1.14
 
 require (
+	github.com/bwmarrin/snowflake v0.3.0
 	github.com/coreos/etcd v3.3.22+incompatible // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
 	github.com/dustin/go-humanize v1.0.0 // indirect
@@ -11,6 +12,7 @@ require (
 	github.com/gogo/protobuf v1.3.1 // indirect
 	github.com/golang/protobuf v1.4.2
 	github.com/google/uuid v1.1.1
+	github.com/jinzhu/gorm v1.9.12
 	github.com/micro/go-micro v1.18.0
 	github.com/micro/go-micro/v2 v2.8.0
 	github.com/miekg/dns v1.1.29 // indirect
