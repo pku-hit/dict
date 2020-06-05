@@ -8,6 +8,7 @@ import (
 	"github.com/golang/protobuf/ptypes/wrappers"
 	"github.com/google/uuid"
 	"github.com/micro/go-micro/util/log"
+	"github.com/pku-hit/dict/component/database"
 	"github.com/pku-hit/dict/proto"
 
 	"github.com/pku-hit/libresp"
@@ -15,9 +16,12 @@ import (
 
 type Dict struct{}
 
-func (e *Dict) ListRoot(ctx context.Context, req *empty.Empty, resp *libresp.Response) error {
+func (e *Dict) ListRoot(ctx context.Context, req *empty.Empty, resp *libresp.ListResponse) error {
 	log.Log("Received Dict.ListRoot request")
-	resp.GenerateResponseSucc()
+	database.SaveDict()
+	value := &proto.DictItem{DictUniqueId:uuid.New().String(), Code:"code", Name:"name", Type:proto.DictType_Root}
+	result, _ := ptypes.MarshalAny(value)
+	resp.GenerateListResponseSucc([]*any.Any{result})
 	return nil
 }
 

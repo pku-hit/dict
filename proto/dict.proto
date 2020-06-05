@@ -8,7 +8,7 @@ import "google/protobuf/struct.proto";
 package proto;
 
 service Dict {
-	rpc ListRoot(google.protobuf.Empty) returns (libresp.Response) {}
+	rpc ListRoot(google.protobuf.Empty) returns (libresp.ListResponse) {}
     rpc ListChildren(google.protobuf.StringValue) returns (libresp.ListResponse) {}
     rpc AddDict(AddDictRequest) returns (libresp.Response) {}
     rpc DelDict(google.protobuf.StringValue) returns (libresp.Response) {}

@@ -46,7 +46,7 @@ func NewDictEndpoints() []*api.Endpoint {
 // Client API for Dict service
 
 type DictService interface {
-	ListRoot(ctx context.Context, in *empty.Empty, opts ...client.CallOption) (*libresp.Response, error)
+	ListRoot(ctx context.Context, in *empty.Empty, opts ...client.CallOption) (*libresp.ListResponse, error)
 	ListChildren(ctx context.Context, in *wrappers.StringValue, opts ...client.CallOption) (*libresp.ListResponse, error)
 	AddDict(ctx context.Context, in *AddDictRequest, opts ...client.CallOption) (*libresp.Response, error)
 	DelDict(ctx context.Context, in *wrappers.StringValue, opts ...client.CallOption) (*libresp.Response, error)
@@ -65,9 +65,9 @@ func NewDictService(name string, c client.Client) DictService {
 	}
 }
 
-func (c *dictService) ListRoot(ctx context.Context, in *empty.Empty, opts ...client.CallOption) (*libresp.Response, error) {
+func (c *dictService) ListRoot(ctx context.Context, in *empty.Empty, opts ...client.CallOption) (*libresp.ListResponse, error) {
 	req := c.c.NewRequest(c.name, "Dict.ListRoot", in)
-	out := new(libresp.Response)
+	out := new(libresp.ListResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -118,7 +118,7 @@ func (c *dictService) GetValue(ctx context.Context, in *wrappers.StringValue, op
 // Server API for Dict service
 
 type DictHandler interface {
-	ListRoot(context.Context, *empty.Empty, *libresp.Response) error
+	ListRoot(context.Context, *empty.Empty, *libresp.ListResponse) error
 	ListChildren(context.Context, *wrappers.StringValue, *libresp.ListResponse) error
 	AddDict(context.Context, *AddDictRequest, *libresp.Response) error
 	DelDict(context.Context, *wrappers.StringValue, *libresp.Response) error
@@ -127,7 +127,7 @@ type DictHandler interface {
 
 func RegisterDictHandler(s server.Server, hdlr DictHandler, opts ...server.HandlerOption) error {
 	type dict interface {
-		ListRoot(ctx context.Context, in *empty.Empty, out *libresp.Response) error
+		ListRoot(ctx context.Context, in *empty.Empty, out *libresp.ListResponse) error
 		ListChildren(ctx context.Context, in *wrappers.StringValue, out *libresp.ListResponse) error
 		AddDict(ctx context.Context, in *AddDictRequest, out *libresp.Response) error
 		DelDict(ctx context.Context, in *wrappers.StringValue, out *libresp.Response) error
@@ -144,7 +144,7 @@ type dictHandler struct {
 	DictHandler
 }
 
-func (h *dictHandler) ListRoot(ctx context.Context, in *empty.Empty, out *libresp.Response) error {
+func (h *dictHandler) ListRoot(ctx context.Context, in *empty.Empty, out *libresp.ListResponse) error {
 	return h.DictHandler.ListRoot(ctx, in, out)
 }
 
