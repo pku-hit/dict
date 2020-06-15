@@ -8,10 +8,22 @@ import "google/protobuf/struct.proto";
 package proto;
 
 service Dict {
+    // 获取全部Root节点列表
     rpc ListRoot (google.protobuf.Empty) returns (libresp.ListResponse) {}
+
+    // 获取某一分类下的Root节点列表
+    rpc ListCategory (google.protobuf.StringValue) returns (libresp.ListResponse) {}
+
+    // 获取某一节点组下的子节点列表
     rpc ListChildren (google.protobuf.StringValue) returns (libresp.ListResponse) {}
+
+    // 添加字典
     rpc AddDict (AddDictRequest) returns (libresp.Response) {}
+
+    // 删除字典项
     rpc DelDict (google.protobuf.StringValue) returns (libresp.Response) {}
+
+    // 通过字典ID获取指定节点的值
     rpc GetValue (google.protobuf.StringValue) returns (libresp.GenericResponse) {}
 }
 
