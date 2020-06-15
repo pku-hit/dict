@@ -4,12 +4,16 @@
 package proto
 
 import (
+	context "context"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
-	_ "github.com/golang/protobuf/ptypes/empty"
+	empty "github.com/golang/protobuf/ptypes/empty"
 	_struct "github.com/golang/protobuf/ptypes/struct"
-	_ "github.com/golang/protobuf/ptypes/wrappers"
-	_ "github.com/pku-hit/libresp"
+	wrappers "github.com/golang/protobuf/ptypes/wrappers"
+	libresp "github.com/pku-hit/libresp"
+	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -268,4 +272,228 @@ var fileDescriptor_22c1e80adc3f1fcd = []byte{
 	0x3a, 0xe9, 0x86, 0xec, 0xbd, 0x09, 0x64, 0x64, 0xbb, 0x17, 0x6f, 0x55, 0xcf, 0xc0, 0x9d, 0xa3,
 	0x34, 0x84, 0xff, 0xc8, 0xfd, 0x4e, 0x3e, 0xc7, 0x0a, 0x05, 0x4d, 0xef, 0xa6, 0x2c, 0x06, 0x46,
 	0xf1, 0xe6, 0x6f, 0x00, 0x00, 0x00, 0xff, 0xff, 0xf5, 0xcd, 0xc1, 0xaf, 0xc7, 0x03, 0x00, 0x00,
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConn
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion4
+
+// DictClient is the client API for Dict service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type DictClient interface {
+	ListRoot(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*libresp.ListResponse, error)
+	ListChildren(ctx context.Context, in *wrappers.StringValue, opts ...grpc.CallOption) (*libresp.ListResponse, error)
+	AddDict(ctx context.Context, in *AddDictRequest, opts ...grpc.CallOption) (*libresp.Response, error)
+	DelDict(ctx context.Context, in *wrappers.StringValue, opts ...grpc.CallOption) (*libresp.Response, error)
+	GetValue(ctx context.Context, in *wrappers.StringValue, opts ...grpc.CallOption) (*libresp.GenericResponse, error)
+}
+
+type dictClient struct {
+	cc *grpc.ClientConn
+}
+
+func NewDictClient(cc *grpc.ClientConn) DictClient {
+	return &dictClient{cc}
+}
+
+func (c *dictClient) ListRoot(ctx context.Context, in *empty.Empty, opts ...grpc.CallOption) (*libresp.ListResponse, error) {
+	out := new(libresp.ListResponse)
+	err := c.cc.Invoke(ctx, "/proto.Dict/ListRoot", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dictClient) ListChildren(ctx context.Context, in *wrappers.StringValue, opts ...grpc.CallOption) (*libresp.ListResponse, error) {
+	out := new(libresp.ListResponse)
+	err := c.cc.Invoke(ctx, "/proto.Dict/ListChildren", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dictClient) AddDict(ctx context.Context, in *AddDictRequest, opts ...grpc.CallOption) (*libresp.Response, error) {
+	out := new(libresp.Response)
+	err := c.cc.Invoke(ctx, "/proto.Dict/AddDict", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dictClient) DelDict(ctx context.Context, in *wrappers.StringValue, opts ...grpc.CallOption) (*libresp.Response, error) {
+	out := new(libresp.Response)
+	err := c.cc.Invoke(ctx, "/proto.Dict/DelDict", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dictClient) GetValue(ctx context.Context, in *wrappers.StringValue, opts ...grpc.CallOption) (*libresp.GenericResponse, error) {
+	out := new(libresp.GenericResponse)
+	err := c.cc.Invoke(ctx, "/proto.Dict/GetValue", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// DictServer is the server API for Dict service.
+type DictServer interface {
+	ListRoot(context.Context, *empty.Empty) (*libresp.ListResponse, error)
+	ListChildren(context.Context, *wrappers.StringValue) (*libresp.ListResponse, error)
+	AddDict(context.Context, *AddDictRequest) (*libresp.Response, error)
+	DelDict(context.Context, *wrappers.StringValue) (*libresp.Response, error)
+	GetValue(context.Context, *wrappers.StringValue) (*libresp.GenericResponse, error)
+}
+
+// UnimplementedDictServer can be embedded to have forward compatible implementations.
+type UnimplementedDictServer struct {
+}
+
+func (*UnimplementedDictServer) ListRoot(ctx context.Context, req *empty.Empty) (*libresp.ListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListRoot not implemented")
+}
+func (*UnimplementedDictServer) ListChildren(ctx context.Context, req *wrappers.StringValue) (*libresp.ListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListChildren not implemented")
+}
+func (*UnimplementedDictServer) AddDict(ctx context.Context, req *AddDictRequest) (*libresp.Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddDict not implemented")
+}
+func (*UnimplementedDictServer) DelDict(ctx context.Context, req *wrappers.StringValue) (*libresp.Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DelDict not implemented")
+}
+func (*UnimplementedDictServer) GetValue(ctx context.Context, req *wrappers.StringValue) (*libresp.GenericResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetValue not implemented")
+}
+
+func RegisterDictServer(s *grpc.Server, srv DictServer) {
+	s.RegisterService(&_Dict_serviceDesc, srv)
+}
+
+func _Dict_ListRoot_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(empty.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DictServer).ListRoot(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.Dict/ListRoot",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DictServer).ListRoot(ctx, req.(*empty.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Dict_ListChildren_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(wrappers.StringValue)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DictServer).ListChildren(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.Dict/ListChildren",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DictServer).ListChildren(ctx, req.(*wrappers.StringValue))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Dict_AddDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddDictRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DictServer).AddDict(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.Dict/AddDict",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DictServer).AddDict(ctx, req.(*AddDictRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Dict_DelDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(wrappers.StringValue)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DictServer).DelDict(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.Dict/DelDict",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DictServer).DelDict(ctx, req.(*wrappers.StringValue))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Dict_GetValue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(wrappers.StringValue)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DictServer).GetValue(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto.Dict/GetValue",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DictServer).GetValue(ctx, req.(*wrappers.StringValue))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _Dict_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "proto.Dict",
+	HandlerType: (*DictServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ListRoot",
+			Handler:    _Dict_ListRoot_Handler,
+		},
+		{
+			MethodName: "ListChildren",
+			Handler:    _Dict_ListChildren_Handler,
+		},
+		{
+			MethodName: "AddDict",
+			Handler:    _Dict_AddDict_Handler,
+		},
+		{
+			MethodName: "DelDict",
+			Handler:    _Dict_DelDict_Handler,
+		},
+		{
+			MethodName: "GetValue",
+			Handler:    _Dict_GetValue_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "proto/dict.proto",
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/micro/go-micro/util/log"
 	"github.com/micro/go-micro/v2"
+	"github.com/micro/go-plugins/registry/etcdv3/v2"
 	"github.com/pku-hit/dict/handler"
 	_ "github.com/pku-hit/dict/model/entity"
 	proto "github.com/pku-hit/dict/proto"
@@ -10,8 +11,10 @@ import (
 )
 
 func main() {
+
 	// New Service
 	service := micro.NewService(
+		micro.Registry(etcdv3.NewRegistry()),
 		micro.Name("open.svc.dict"),
 		micro.Version("latest"),
 	)

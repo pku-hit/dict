@@ -5,6 +5,7 @@ import "time"
 type DictInfo struct {
 	ID       string     `gorm:"primary_key;type:varchar(32)"`
 	Type     string     `gorm:"column:type;type:varchar(32)"`
+	Category string     `gorm:"category;type:varchar(64)"`
 	Parent   *DictInfo  `gorm:"ForeignKey:ParentId"`
 	ParentId string     `gorm:"parent_id;type:varchar(32)"`
 	Code     string     `gorm:"code";type:varchar(32)`
