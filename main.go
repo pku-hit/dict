@@ -6,7 +6,7 @@ import (
 	"github.com/micro/go-plugins/registry/etcdv3/v2"
 	"github.com/pku-hit/dict/handler"
 	_ "github.com/pku-hit/dict/model/entity"
-	proto "github.com/pku-hit/dict/proto"
+	"github.com/pku-hit/dict/proto"
 	"github.com/pku-hit/dict/subscriber"
 )
 
@@ -15,8 +15,8 @@ func main() {
 	// New Service
 	service := micro.NewService(
 		micro.Registry(etcdv3.NewRegistry()),
-		micro.Name("open.svc.dict"),
-		micro.Version("latest"),
+		micro.Name(proto.ServiceName),
+		micro.Version(proto.Version),
 	)
 
 	// Initialise service
@@ -26,10 +26,10 @@ func main() {
 	proto.RegisterDictHandler(service.Server(), new(handler.Dict))
 
 	// Register Struct as Subscriber
-	micro.RegisterSubscriber("open.svc.dict", service.Server(), new(subscriber.Dict))
+	micro.RegisterSubscriber(proto.ServiceName, service.Server(), new(subscriber.Dict))
 
 	// Register Function as Subscriber
-	micro.RegisterSubscriber("open.svc.dict", service.Server(), subscriber.Handler)
+	micro.RegisterSubscriber(proto.ServiceName, service.Server(), subscriber.Handler)
 
 	// Run service
 	if err := service.Run(); err != nil {

@@ -46,10 +46,17 @@ func NewDictEndpoints() []*api.Endpoint {
 // Client API for Dict service
 
 type DictService interface {
+	// 获取全部Root节点列表
 	ListRoot(ctx context.Context, in *empty.Empty, opts ...client.CallOption) (*libresp.ListResponse, error)
+	// 获取某一分类下的Root节点列表
+	ListCategory(ctx context.Context, in *wrappers.StringValue, opts ...client.CallOption) (*libresp.ListResponse, error)
+	// 获取某一节点组下的子节点列表
 	ListChildren(ctx context.Context, in *wrappers.StringValue, opts ...client.CallOption) (*libresp.ListResponse, error)
+	// 添加字典
 	AddDict(ctx context.Context, in *AddDictRequest, opts ...client.CallOption) (*libresp.Response, error)
+	// 删除字典项
 	DelDict(ctx context.Context, in *wrappers.StringValue, opts ...client.CallOption) (*libresp.Response, error)
+	// 通过字典ID获取指定节点的值
 	GetValue(ctx context.Context, in *wrappers.StringValue, opts ...client.CallOption) (*libresp.GenericResponse, error)
 }
 
@@ -67,6 +74,16 @@ func NewDictService(name string, c client.Client) DictService {
 
 func (c *dictService) ListRoot(ctx context.Context, in *empty.Empty, opts ...client.CallOption) (*libresp.ListResponse, error) {
 	req := c.c.NewRequest(c.name, "Dict.ListRoot", in)
+	out := new(libresp.ListResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *dictService) ListCategory(ctx context.Context, in *wrappers.StringValue, opts ...client.CallOption) (*libresp.ListResponse, error) {
+	req := c.c.NewRequest(c.name, "Dict.ListCategory", in)
 	out := new(libresp.ListResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -118,16 +135,24 @@ func (c *dictService) GetValue(ctx context.Context, in *wrappers.StringValue, op
 // Server API for Dict service
 
 type DictHandler interface {
+	// 获取全部Root节点列表
 	ListRoot(context.Context, *empty.Empty, *libresp.ListResponse) error
+	// 获取某一分类下的Root节点列表
+	ListCategory(context.Context, *wrappers.StringValue, *libresp.ListResponse) error
+	// 获取某一节点组下的子节点列表
 	ListChildren(context.Context, *wrappers.StringValue, *libresp.ListResponse) error
+	// 添加字典
 	AddDict(context.Context, *AddDictRequest, *libresp.Response) error
+	// 删除字典项
 	DelDict(context.Context, *wrappers.StringValue, *libresp.Response) error
+	// 通过字典ID获取指定节点的值
 	GetValue(context.Context, *wrappers.StringValue, *libresp.GenericResponse) error
 }
 
 func RegisterDictHandler(s server.Server, hdlr DictHandler, opts ...server.HandlerOption) error {
 	type dict interface {
 		ListRoot(ctx context.Context, in *empty.Empty, out *libresp.ListResponse) error
+		ListCategory(ctx context.Context, in *wrappers.StringValue, out *libresp.ListResponse) error
 		ListChildren(ctx context.Context, in *wrappers.StringValue, out *libresp.ListResponse) error
 		AddDict(ctx context.Context, in *AddDictRequest, out *libresp.Response) error
 		DelDict(ctx context.Context, in *wrappers.StringValue, out *libresp.Response) error
@@ -146,6 +171,10 @@ type dictHandler struct {
 
 func (h *dictHandler) ListRoot(ctx context.Context, in *empty.Empty, out *libresp.ListResponse) error {
 	return h.DictHandler.ListRoot(ctx, in, out)
+}
+
+func (h *dictHandler) ListCategory(ctx context.Context, in *wrappers.StringValue, out *libresp.ListResponse) error {
+	return h.DictHandler.ListCategory(ctx, in, out)
 }
 
 func (h *dictHandler) ListChildren(ctx context.Context, in *wrappers.StringValue, out *libresp.ListResponse) error {
