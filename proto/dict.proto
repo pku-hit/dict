@@ -3,7 +3,6 @@ syntax = "proto3";
 import "github.com/pku-hit/libresp/msg-response.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/wrappers.proto";
-import "google/protobuf/struct.proto";
 
 package proto;
 
@@ -21,7 +20,7 @@ service Dict {
     }
 
     // 添加字典
-    rpc AddDict (AddDictRequest) returns (libresp.Response) {
+    rpc AddDict (AddDictRequest) returns (libresp.GenericResponse) {
     }
 
     // 删除字典项
@@ -61,9 +60,11 @@ message ListChildrenRequest {
 }
 
 message AddDictRequest {
-    string parentId = 1;
-    DictType type = 2;
-    string code = 3;
-    string name = 4;
-    google.protobuf.Value value = 5;
+    string category = 1;
+    string parentId = 2;
+    DictType type = 3;
+    string code = 4;
+    string pyCode = 5;
+    string name = 6;
+    string value = 7;
 }

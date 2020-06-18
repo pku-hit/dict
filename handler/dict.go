@@ -42,10 +42,14 @@ func (e *Dict) ListChildren(ctx context.Context, req *proto.ListChildrenRequest,
 	return nil
 }
 
-func (e *Dict) AddDict(ctx context.Context, req *proto.AddDictRequest, resp *libresp.Response) error {
+func (e *Dict) AddDict(ctx context.Context, req *proto.AddDictRequest, resp *libresp.GenericResponse) error {
 	log.Log("Received Dict.AddDict request")
-	resp.GenerateResponseSucc()
-
+	dict, err := database.NewDict(req.Category, req.ParentId, req.Code, req.Name, req.PyCode, req.Type, req.Value)
+	if err != nil {
+		resp.GenerateGenericResponseWithInfo(libresp.GENERAL_ERROR, err.Error())
+		return nil
+	}
+	resp.GenerateGenericResponseSucc(model.GetDictAny(dict))
 	return nil
 }
 

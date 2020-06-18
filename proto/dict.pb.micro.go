@@ -7,7 +7,6 @@ import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
 	empty "github.com/golang/protobuf/ptypes/empty"
-	_ "github.com/golang/protobuf/ptypes/struct"
 	wrappers "github.com/golang/protobuf/ptypes/wrappers"
 	libresp "github.com/pku-hit/libresp"
 	math "math"
@@ -53,7 +52,7 @@ type DictService interface {
 	// 获取某一节点组下的子节点列表
 	ListChildren(ctx context.Context, in *ListChildrenRequest, opts ...client.CallOption) (*libresp.ListResponse, error)
 	// 添加字典
-	AddDict(ctx context.Context, in *AddDictRequest, opts ...client.CallOption) (*libresp.Response, error)
+	AddDict(ctx context.Context, in *AddDictRequest, opts ...client.CallOption) (*libresp.GenericResponse, error)
 	// 删除字典项
 	DelDict(ctx context.Context, in *wrappers.StringValue, opts ...client.CallOption) (*libresp.Response, error)
 	// 通过字典ID获取指定节点的值
@@ -102,9 +101,9 @@ func (c *dictService) ListChildren(ctx context.Context, in *ListChildrenRequest,
 	return out, nil
 }
 
-func (c *dictService) AddDict(ctx context.Context, in *AddDictRequest, opts ...client.CallOption) (*libresp.Response, error) {
+func (c *dictService) AddDict(ctx context.Context, in *AddDictRequest, opts ...client.CallOption) (*libresp.GenericResponse, error) {
 	req := c.c.NewRequest(c.name, "Dict.AddDict", in)
-	out := new(libresp.Response)
+	out := new(libresp.GenericResponse)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
 		return nil, err
@@ -142,7 +141,7 @@ type DictHandler interface {
 	// 获取某一节点组下的子节点列表
 	ListChildren(context.Context, *ListChildrenRequest, *libresp.ListResponse) error
 	// 添加字典
-	AddDict(context.Context, *AddDictRequest, *libresp.Response) error
+	AddDict(context.Context, *AddDictRequest, *libresp.GenericResponse) error
 	// 删除字典项
 	DelDict(context.Context, *wrappers.StringValue, *libresp.Response) error
 	// 通过字典ID获取指定节点的值
@@ -154,7 +153,7 @@ func RegisterDictHandler(s server.Server, hdlr DictHandler, opts ...server.Handl
 		ListRoot(ctx context.Context, in *empty.Empty, out *libresp.ListResponse) error
 		ListCategory(ctx context.Context, in *wrappers.StringValue, out *libresp.ListResponse) error
 		ListChildren(ctx context.Context, in *ListChildrenRequest, out *libresp.ListResponse) error
-		AddDict(ctx context.Context, in *AddDictRequest, out *libresp.Response) error
+		AddDict(ctx context.Context, in *AddDictRequest, out *libresp.GenericResponse) error
 		DelDict(ctx context.Context, in *wrappers.StringValue, out *libresp.Response) error
 		GetValue(ctx context.Context, in *wrappers.StringValue, out *libresp.GenericResponse) error
 	}
@@ -181,7 +180,7 @@ func (h *dictHandler) ListChildren(ctx context.Context, in *ListChildrenRequest,
 	return h.DictHandler.ListChildren(ctx, in, out)
 }
 
-func (h *dictHandler) AddDict(ctx context.Context, in *AddDictRequest, out *libresp.Response) error {
+func (h *dictHandler) AddDict(ctx context.Context, in *AddDictRequest, out *libresp.GenericResponse) error {
 	return h.DictHandler.AddDict(ctx, in, out)
 }
 

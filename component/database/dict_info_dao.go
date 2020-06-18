@@ -100,12 +100,12 @@ func ListRoot() (dicts []*entity.DictInfo, err error) {
 func ListChildren(parentId string, dictType ...proto.DictType) (dicts []*entity.DictInfo, err error) {
 	query := db.New()
 	if len(dictType) > 0 {
-		query.Where("Type in (?)", dictType)
+		query.Where("type in (?)", dictType)
 	}
 	if util.IsEmptyString(parentId) {
 		err = errors.New("未指定父节点ID")
 		return
 	}
-	err = query.Where("ParentId = ?", parentId).Find(&dicts).Error
+	err = query.Where("parent_id = ?", parentId).Find(&dicts).Error
 	return
 }
