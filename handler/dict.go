@@ -29,9 +29,9 @@ func (e *Dict) ListChildren(ctx context.Context, req *proto.ListChildrenRequest,
 	log.Logf("Received Dict.ListChildren request %s", req)
 	types := make([]proto.DictType, 0)
 	if req.Type != proto.DictType_Node && req.Type != proto.DictType_Group {
-		types = {proto.}
+		types = append(types, proto.DictType_Node, proto.DictType_Group)
 	}
-	dicts, err := database.ListChildren(req.ParentId, )
+	dicts, err := database.ListChildren(req.ParentId, types...)
 	if err != nil {
 		resp.GenerateListResponseWithInfo(libresp.GENERAL_ERROR, err.Error())
 		return nil
