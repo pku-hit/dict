@@ -51,7 +51,7 @@ type DictService interface {
 	// 获取某一分类下的Root节点列表
 	ListCategory(ctx context.Context, in *wrappers.StringValue, opts ...client.CallOption) (*libresp.ListResponse, error)
 	// 获取某一节点组下的子节点列表
-	ListChildren(ctx context.Context, in *wrappers.StringValue, opts ...client.CallOption) (*libresp.ListResponse, error)
+	ListChildren(ctx context.Context, in *ListChildrenRequest, opts ...client.CallOption) (*libresp.ListResponse, error)
 	// 添加字典
 	AddDict(ctx context.Context, in *AddDictRequest, opts ...client.CallOption) (*libresp.Response, error)
 	// 删除字典项
@@ -92,7 +92,7 @@ func (c *dictService) ListCategory(ctx context.Context, in *wrappers.StringValue
 	return out, nil
 }
 
-func (c *dictService) ListChildren(ctx context.Context, in *wrappers.StringValue, opts ...client.CallOption) (*libresp.ListResponse, error) {
+func (c *dictService) ListChildren(ctx context.Context, in *ListChildrenRequest, opts ...client.CallOption) (*libresp.ListResponse, error) {
 	req := c.c.NewRequest(c.name, "Dict.ListChildren", in)
 	out := new(libresp.ListResponse)
 	err := c.c.Call(ctx, req, out, opts...)
@@ -140,7 +140,7 @@ type DictHandler interface {
 	// 获取某一分类下的Root节点列表
 	ListCategory(context.Context, *wrappers.StringValue, *libresp.ListResponse) error
 	// 获取某一节点组下的子节点列表
-	ListChildren(context.Context, *wrappers.StringValue, *libresp.ListResponse) error
+	ListChildren(context.Context, *ListChildrenRequest, *libresp.ListResponse) error
 	// 添加字典
 	AddDict(context.Context, *AddDictRequest, *libresp.Response) error
 	// 删除字典项
@@ -153,7 +153,7 @@ func RegisterDictHandler(s server.Server, hdlr DictHandler, opts ...server.Handl
 	type dict interface {
 		ListRoot(ctx context.Context, in *empty.Empty, out *libresp.ListResponse) error
 		ListCategory(ctx context.Context, in *wrappers.StringValue, out *libresp.ListResponse) error
-		ListChildren(ctx context.Context, in *wrappers.StringValue, out *libresp.ListResponse) error
+		ListChildren(ctx context.Context, in *ListChildrenRequest, out *libresp.ListResponse) error
 		AddDict(ctx context.Context, in *AddDictRequest, out *libresp.Response) error
 		DelDict(ctx context.Context, in *wrappers.StringValue, out *libresp.Response) error
 		GetValue(ctx context.Context, in *wrappers.StringValue, out *libresp.GenericResponse) error
@@ -177,7 +177,7 @@ func (h *dictHandler) ListCategory(ctx context.Context, in *wrappers.StringValue
 	return h.DictHandler.ListCategory(ctx, in, out)
 }
 
-func (h *dictHandler) ListChildren(ctx context.Context, in *wrappers.StringValue, out *libresp.ListResponse) error {
+func (h *dictHandler) ListChildren(ctx context.Context, in *ListChildrenRequest, out *libresp.ListResponse) error {
 	return h.DictHandler.ListChildren(ctx, in, out)
 }
 

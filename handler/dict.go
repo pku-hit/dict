@@ -2,8 +2,6 @@ package handler
 
 import (
 	"context"
-	"github.com/golang/protobuf/ptypes"
-	"github.com/golang/protobuf/ptypes/any"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/golang/protobuf/ptypes/wrappers"
 	"github.com/micro/go-micro/util/log"
@@ -18,31 +16,28 @@ type Dict struct{}
 
 func (e *Dict) ListRoot(ctx context.Context, req *empty.Empty, resp *libresp.ListResponse) error {
 	log.Log("Received Dict.ListRoot request")
-	dicts := database.ListDict("")
-
-	any := make([]*any.Any, 0)
-	for _, dict := range dicts {
-		temp := model.GetDictPB(dict)
-		result, _ := ptypes.MarshalAny(temp)
-		any = append(any, result)
+	dicts, err := database.ListRoot()
+	if err != nil {
+		resp.GenerateListResponseWithInfo(libresp.GENERAL_ERROR, err.Error())
+		return nil
 	}
-
-	resp.GenerateListResponseSucc(any)
+	resp.GenerateListResponseSucc(model.GetDictsAny(dicts))
 	return nil
 }
 
-func (e *Dict) ListChildren(ctx context.Context, req *wrappers.StringValue, resp *libresp.ListResponse) error {
+func (e *Dict) ListChildren(ctx context.Context, req *proto.ListChildrenRequest, resp *libresp.ListResponse) error {
 	log.Logf("Received Dict.ListChildren request %s", req)
-	dicts := database.ListDict(req.Value)
-
-	any := make([]*any.Any, 0)
-	for _, dict := range dicts {
-		temp := model.GetDictPB(dict)
-		result, _ := ptypes.MarshalAny(temp)
-		any = append(any, result)
+	types := make([]proto.DictType, 0)
+	if req.Type != proto.DictType_Node && req.Type != proto.DictType_Group {
+		types = {proto.}
+	}
+	dicts, err := database.ListChildren(req.ParentId, )
+	if err != nil {
+		resp.GenerateListResponseWithInfo(libresp.GENERAL_ERROR, err.Error())
+		return nil
 	}
 
-	resp.GenerateListResponseSucc(any)
+	resp.GenerateListResponseSucc(model.GetDictsAny(dicts))
 	log.Info(resp)
 	return nil
 }
@@ -50,6 +45,7 @@ func (e *Dict) ListChildren(ctx context.Context, req *wrappers.StringValue, resp
 func (e *Dict) AddDict(ctx context.Context, req *proto.AddDictRequest, resp *libresp.Response) error {
 	log.Log("Received Dict.AddDict request")
 	resp.GenerateResponseSucc()
+
 	return nil
 }
 

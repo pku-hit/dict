@@ -9,22 +9,28 @@ package proto;
 
 service Dict {
     // 获取全部Root节点列表
-    rpc ListRoot (google.protobuf.Empty) returns (libresp.ListResponse) {}
+    rpc ListRoot (google.protobuf.Empty) returns (libresp.ListResponse) {
+    }
 
     // 获取某一分类下的Root节点列表
-    rpc ListCategory (google.protobuf.StringValue) returns (libresp.ListResponse) {}
+    rpc ListCategory (google.protobuf.StringValue) returns (libresp.ListResponse) {
+    }
 
     // 获取某一节点组下的子节点列表
-    rpc ListChildren (google.protobuf.StringValue) returns (libresp.ListResponse) {}
+    rpc ListChildren (ListChildrenRequest) returns (libresp.ListResponse) {
+    }
 
     // 添加字典
-    rpc AddDict (AddDictRequest) returns (libresp.Response) {}
+    rpc AddDict (AddDictRequest) returns (libresp.Response) {
+    }
 
     // 删除字典项
-    rpc DelDict (google.protobuf.StringValue) returns (libresp.Response) {}
+    rpc DelDict (google.protobuf.StringValue) returns (libresp.Response) {
+    }
 
     // 通过字典ID获取指定节点的值
-    rpc GetValue (google.protobuf.StringValue) returns (libresp.GenericResponse) {}
+    rpc GetValue (google.protobuf.StringValue) returns (libresp.GenericResponse) {
+    }
 }
 
 enum DictType {
@@ -47,6 +53,11 @@ message DictItem {
     DictType type = 4;
     DictStatus status = 5;
     string value = 6;
+}
+
+message ListChildrenRequest {
+    DictType type = 1;
+    string parentId = 2;
 }
 
 message AddDictRequest {
