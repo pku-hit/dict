@@ -55,13 +55,23 @@ func (e *Dict) AddDict(ctx context.Context, req *proto.AddDictRequest, resp *lib
 
 func (e *Dict) DelDict(ctx context.Context, req *wrappers.StringValue, resp *libresp.Response) error {
 	log.Log("Received Dict.DelDict request")
-	resp.GenerateResponseSucc()
+	err := database.DeleteDict(req.Value, true)
+	if err != nil {
+		resp.GenerateResponseWithInfo(libresp.GENERAL_ERROR, err.Error())
+	} else {
+		resp.GenerateResponseSucc()
+	}
 	return nil
 }
 
 func (e *Dict) GetValue(ctx context.Context, req *wrappers.StringValue, resp *libresp.GenericResponse) error {
 	log.Log("Received Dict.GetValue request")
-	resp.GenerateGenericResponseSucc(nil)
+	dict, err := database.ExistDictWithId(req.Value)
+	if err != nil {
+		resp.GenerateGenericResponseWithInfo(libresp.GENERAL_ERROR, err.Error())
+	} else {
+		resp.GenerateGenericResponseSucc(model.GetDictAny(dict))
+	}
 	return nil
 }
 

@@ -41,6 +41,7 @@ func init() {
 	} else {
 		log.Info(db)
 	}
+	db.LogMode(true)
 
 	registerEntity()
 }
