@@ -103,8 +103,11 @@ func NewDict(category, parentId, code, name, pyCode string, dictType proto.DictT
 	return
 }
 
-func ListRoot() (dicts []*entity.DictInfo, err error) {
+func ListRoot(category string) (dicts []*entity.DictInfo, err error) {
 	query := db.New()
+	if !util.String.IsEmptyString(category) {
+		query.Where("category = ?", category)
+	}
 	query.Where("Type = ? and ParentId is null", proto.DictType_Root.String())
 	err = query.Find(&dicts).Error
 	if err != nil {

@@ -16,7 +16,7 @@ type Dict struct{}
 
 func (e *Dict) ListRoot(ctx context.Context, req *empty.Empty, resp *libresp.ListResponse) error {
 	log.Log("Received Dict.ListRoot request")
-	dicts, err := database.ListRoot()
+	dicts, err := database.ListRoot("")
 	if err != nil {
 		resp.GenerateListResponseWithInfo(libresp.GENERAL_ERROR, err.Error())
 		return nil
@@ -76,5 +76,12 @@ func (e *Dict) GetValue(ctx context.Context, req *wrappers.StringValue, resp *li
 }
 
 func (e *Dict) ListCategory(ctx context.Context, req *wrappers.StringValue, resp *libresp.ListResponse) error {
+	log.Log("Received Dict.ListCategory request")
+	dicts, err := database.ListRoot(req.Value)
+	if err != nil {
+		resp.GenerateListResponseWithInfo(libresp.GENERAL_ERROR, err.Error())
+		return nil
+	}
+	resp.GenerateListResponseSucc(model.GetDictsAny(dicts))
 	return nil
 }
